@@ -1,4 +1,4 @@
-service: dynamo
+service: routes-api
 
 frameworkVersion: ">=1.1.0 <2.0.0"
 
@@ -27,7 +27,7 @@ functions:
 
 resources:
   Resources:
-    TodosDynamoDbTable:
+    RoutesDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
