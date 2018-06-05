@@ -1,0 +1,9 @@
+{
+  "name": "dynamo",
+  "version": "1.0.0",
+  "description": "Count times a route has been hit",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+  }
+}
