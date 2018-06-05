@@ -2,15 +2,15 @@ provider "aws" {
   region = "us-east-1"
 }
 
-variable "app_version" {
+data "archive_file" "lambda" {
+  type = "zip"
+  source_file = "main.js"
+  output_path = "lambda.zip"
 }
 
 resource "aws_lambda_function" "example" {
+  filename = "${data.archive_file.lambda.output_path}"
   function_name = "ServerlessExample"
-
-  # The bucket name as created earlier with "aws s3api create-bucket"
-  s3_bucket = "donna-terraform-example"
-  s3_key    = "v${var.app_version}/example.zip"
 
   # "main" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
@@ -19,6 +19,14 @@ resource "aws_lambda_function" "example" {
   runtime = "nodejs6.10"
 
   role = "${aws_iam_role.lambda_exec.arn}"
+  source_code_hash = "${base64sha256(file("${data.archive_file.lambda.output_path}"))}"
+  publish = true
+
+  environment {
+    variables = {
+      DYNAMODB_TABLE = "${aws_dynamodb_table.dynamo-table.id}"
+    }
+  }  
 }
 
 # IAM role which dictates what other AWS services the Lambda function
@@ -39,6 +47,24 @@ resource "aws_iam_role" "lambda_exec" {
       "Sid": ""
     }
   ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "lambda-dynamo-role" {
+    name = "dynamo-policy"
+    role = "${aws_iam_role.lambda_exec.id}"
+    policy = <<EOF
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Action": "dynamodb:*",
+            "Effect": "Allow",
+            "Resource": "${aws_dynamodb_table.dynamo-table.arn}",
+            "Sid": ""
+        }
+    ]
 }
 EOF
 }
