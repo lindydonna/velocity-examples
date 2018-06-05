@@ -1,0 +1,17 @@
+{
+  "name": "claudia",
+  "version": "1.0.0",
+  "description": "1.  [Install Claudia.js](https://claudiajs.com/tutorials/installing.html)",
+  "main": "index.js",
+  "scripts": {
+    "start": "claudia create --region us-east-1 --api-module index --policies policy --set-env-from-json env.json",
+    "deploy": "claudia update"
+  },
+  "files": [
+    "*.js"
+  ],  
+  "dependencies": {
+    "aws-sdk": "^2.251.1",
+    "claudia-api-builder": "^4.0.2"
+  }
+}
