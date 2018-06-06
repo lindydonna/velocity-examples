@@ -1,11 +1,15 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const express = require('express');
+const app = express();
 
+const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.handler = (event, context, callback) => {
-    const route = event.pathParameters.proxy;
+const { PORT = 3000 } = process.env
+
+app.get('/*', function (req, res) {
+    let route = req.path.replace('/', '');
 
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
@@ -14,10 +18,8 @@ module.exports.handler = (event, context, callback) => {
         },
     };
 
-    // fetch route from the database
     dynamoDb.get(params, (error, result) => {
         let count = (result.Item && result.Item.count) || 0;
-        console.log(`Result: ${JSON.stringify(result.Item)}`);
         console.log(`Route: ${route}, Count: ${count}`);
 
         const newValue = {
@@ -29,19 +31,14 @@ module.exports.handler = (event, context, callback) => {
         }
 
         dynamoDb.put(newValue, (error) => {
-            // handle potential errors
             if (error) {
                 console.error(error);
                 return;
             }
 
-            // create a response
-            const response = {
-                statusCode: 200,
-                body: JSON.stringify({ route, count }),
-            };
-
-            callback(null, response);
+            res.send({ route, count });            
         });
     });
-};
+});
+
+app.listen(PORT);

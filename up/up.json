@@ -1,0 +1,23 @@
+{
+    "name": "route-counter",
+    "regions": [
+        "us-west-2"
+    ],
+    "lambda": {
+        "policy": [
+            {
+                "Effect": "Allow",
+                "Resource": "*",
+                "Action": [
+                    "dynamodb:Get*",
+                    "dynamodb:List*",
+                    "dynamodb:PutItem",
+                    "dynamodb:DeleteItem"
+                ]
+            }
+        ]
+    },
+    "environment": {
+        "DYNAMODB_TABLE": "RouteCountsTable"
+    }
+}

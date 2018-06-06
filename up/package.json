@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.252.1",
+    "express": "^4.15.3"
+  }
+}
