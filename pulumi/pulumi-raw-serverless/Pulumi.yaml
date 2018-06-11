@@ -1,0 +1,3 @@
+name: pulumi-raw-serverless
+description: REST API that uses AWS resources directly
+runtime: nodejs

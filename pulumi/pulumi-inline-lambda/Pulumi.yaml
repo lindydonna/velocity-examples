@@ -1,0 +1,3 @@
+name: pulumi-serverless-combined
+description: Serverless REST API with Lambda defined inline.
+runtime: nodejs
