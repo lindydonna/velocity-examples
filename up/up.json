@@ -1,23 +1,23 @@
 {
-    "name": "route-counter",
-    "regions": [
-        "us-west-2"
-    ],
-    "lambda": {
-        "policy": [
-            {
-                "Effect": "Allow",
-                "Resource": "*",
-                "Action": [
-                    "dynamodb:Get*",
-                    "dynamodb:List*",
-                    "dynamodb:PutItem",
-                    "dynamodb:DeleteItem"
-                ]
-            }
+  "name": "route-counter",
+  "regions": [
+    "us-east-1"
+  ],
+  "lambda": {
+    "policy": [
+      {
+        "Effect": "Allow",
+        "Resource": "*",
+        "Action": [
+          "dynamodb:Get*",
+          "dynamodb:List*",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem"
         ]
-    },
-    "environment": {
-        "DYNAMODB_TABLE": "RouteCountsTable"
-    }
+      }
+    ]
+  },
+  "environment": {
+    "DYNAMODB_TABLE": "RouteCountsTable"
+  }
 }
