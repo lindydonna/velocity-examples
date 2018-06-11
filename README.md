@@ -7,3 +7,5 @@ This repo shows how to implement a simple route counter using API Gateway, AWS L
 - [Claudia](./claudia)
 - [Up](./up)
 - [Pulumi](./pulumi)
+
+This is a companion to the Velocity San Jose talk, [Tooling in the age of serverless computing](https://conferences.oreilly.com/velocity/vl-ca/public/schedule/detail/67950).
