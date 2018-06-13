@@ -21,10 +21,10 @@
     npm run start
     ```
 
-1.  (Optional) Change code and update the function:
+1.  Deploy the function code:
 
     ```
-    npm run deploy
+    claudia update
     ```
 
 1.  Claudia will print the API Gateway URL. Set an environment variable and curl a few routes:
