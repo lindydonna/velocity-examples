@@ -1,47 +1,30 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const AWS = require('aws-sdk');
+const dynamo = new AWS.DynamoDB.DocumentClient();
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-module.exports.handler = (event, context, callback) => {
+exports.handler = async (event, context, callback) => {
     const route = event.pathParameters.proxy;
+    const tableName = process.env.DYNAMODB_TABLE;
 
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            id: route,
-        },
-    };
+    // Get the existing count for the route.
+    let value = (await dynamo.get({
+        TableName: tableName,
+        Key: { id: route }
+    }).promise()).Item;
 
-    // fetch route from the database
-    dynamoDb.get(params, (error, result) => {
-        let count = (result.Item && result.Item.count) || 0;
-        console.log(`Result: ${JSON.stringify(result.Item)}`);
-        console.log(`Route: ${route}, Count: ${count}`);
+    let count = (value && value.count) || 0;
 
-        const newValue = {
-            TableName: process.env.DYNAMODB_TABLE,
-            Item: {
-                id: route,
-                count: ++count,
-            },
-        }
+    // Increment the count and write it back to dynamo DB.
+    await (dynamo.put({
+        TableName: tableName,
+        Item: { id: route, count: ++count }
+    })).promise();
 
-        dynamoDb.put(newValue, (error) => {
-            // handle potential errors
-            if (error) {
-                console.error(error);
-                return;
-            }
+    console.log(`Got count ${count} for '${route}'`);
 
-            // create a response
-            const response = {
-                statusCode: 200,
-                body: JSON.stringify({ route, count }),
-            };
-
-            callback(null, response);
-        });
-    });
-};
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ route, count })
+    }
+}

@@ -16,7 +16,7 @@ const table = new aws.dynamodb.Table("counterTable", {
 // The handler for GET /{route+}.
 const getHandler = async (event) => {
     const awssdk = require("aws-sdk");
-    const dynamo   = new awssdk.DynamoDB.DocumentClient();
+    const dynamo = new awssdk.DynamoDB.DocumentClient();
 
     const tableName = table.name.get();
 
